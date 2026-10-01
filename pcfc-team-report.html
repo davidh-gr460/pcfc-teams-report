@@ -22,6 +22,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,Bl
 .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 60px}
 header h1{margin:0;font-size:26px;letter-spacing:-.3px}
 header p{margin:4px 0 0;color:var(--mute)}
+header p.ver{font-size:12.5px;margin-top:2px}
 h2{font-size:17px;margin:28px 0 10px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
@@ -42,6 +43,8 @@ input[type=search]{min-width:170px}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
 .bar{display:grid;grid-template-columns:130px 1fr 74px;gap:8px;align-items:center;font-size:13px;margin:5px 0}
 .bar .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar.wide{grid-template-columns:min(300px,48%) 1fr 74px}
+.bar.wide .lbl{white-space:normal;line-height:1.25}
 .bar .track{background:var(--bg);border-radius:5px;height:16px;overflow:hidden}
 .bar .fill{height:100%;border-radius:5px}
 .bar .val{text-align:right;color:var(--mute);font-variant-numeric:tabular-nums}
@@ -67,6 +70,7 @@ tr.tot td{font-weight:700;border-top:2px solid var(--line)}
 <header>
   <h1>Pontefract Collieries FC · Team Report</h1>
   <p>Affiliation &amp; team requirements overview · <span id="hdrCount"></span></p>
+  <p class="ver">Version 1.3 · Last updated 01 October 2026, 08:58 BST</p>
 </header>
 
 <div class="kpis" id="kpis"></div>
@@ -76,29 +80,29 @@ tr.tot td{font-weight:700;border-top:2px solid var(--line)}
 
 <h2>Breakdown <span style="font-weight:400;color:var(--mute);font-size:13px">(reflects current filters)</span></h2>
 <div class="grid2">
-  <div class="card"><b>By lens</b><div id="bLens"></div></div>
-  <div class="card"><b>By age band</b><div id="bAge"></div></div>
-  <div class="card"><b>By game format</b><div id="bFmt"></div></div>
-  <div class="card"><b>By league</b><div id="bLeague"></div></div>
+  <div class="card"><b>By Lens</b><div id="bLens"></div></div>
+  <div class="card"><b>By Age Band</b><div id="bAge"></div></div>
+  <div class="card"><b>By Game Format</b><div id="bFmt"></div></div>
+  <div class="card"><b>By League</b><div id="bLeague"></div></div>
 </div>
 
-<h2>Lens summary</h2>
+<h2>Lens Summary</h2>
 <div class="card tw"><div id="lensTbl"></div><p style="font-size:12px;color:var(--mute);margin:8px 0 0">Click a row to apply that lens as a filter.</p></div>
 
-<h2>Age group × lens (number of teams)</h2>
+<h2>Age Group × Lens (Number of Teams)</h2>
 <div class="card tw"><div id="matrix"></div></div>
 
-<h2>Team requirements &amp; compliance</h2>
+<h2>Team Requirements &amp; Compliance</h2>
 <div class="card" id="comp"></div>
 
-<h2>Team register</h2>
+<h2>Team Register</h2>
 <div class="card tw tbl-scroll"><table id="reg"></table></div>
 
 <ul class="notes">
-  <li><b>Lens definitions:</b> Girls = female youth teams (U8–U18). Boys = male youth teams (U12–U19). Mixed = mixed youth teams. Adult women = Ladies and Cougars sides. Adult men = Senior First and Vets. Disability = any Pan Disability team (incl. the U18 side), which is shown as its own lens rather than by gender.</li>
-  <li><b>Age bands:</b> U19 teams are counted as youth. The Pan Disability teams L2, L3, L4 and I11's have no age in their name and are treated as adult/open age.</li>
-  <li><b>Player figures:</b> "Players" is the first figure in each team's record; "Registered" and "Allocated" are the labelled figures. Headline totals use Registered. Where Players is lower than Registered the gap is shown in the register.</li>
-  <li><b>County cups:</b> only the single county cup listed in the extract is counted. U12 Maroons, Raptors and Sharks (Sunday) had further competitions hidden behind "Show more".</li>
+  <li><b>Lens Definitions:</b> Girls = female youth teams (U8–U18). Boys = male youth teams (U12–U19). Mixed = mixed youth teams. Adult Women = Ladies and Cougars sides. Adult Men = Senior First and Vets. Disability = any Pan Disability team (incl. the U18 side), which is shown as its own lens rather than by gender.</li>
+  <li><b>Age Bands:</b> U19 teams are counted as youth. The Pan Disability teams L2, L3, L4 and I11's have no age in their name and are treated as adult/open age.</li>
+  <li><b>Player Figures:</b> "Players" is the first figure in each team's record; "Registered" and "Allocated" are the labelled figures. Headline totals use Registered. Where Players is lower than Registered the gap is shown in the register.</li>
+  <li><b>County Cups:</b> only the single county cup listed in the extract is counted. U12 Maroons, Raptors and Sharks (Sunday) had further competitions hidden behind "Show more".</li>
   <li>Penalty points were not visible in the extract so are not reported.</li>
 </ul>
 </div>
@@ -106,71 +110,71 @@ tr.tot td{font-weight:700;border-top:2px solid var(--line)}
 <script>
 // name, gender, format, disability, league, competition, leagueCup, countyCup, players, registered, allocated
 const RAW=[
-["U6 Tots","Mixed","Play Phase",0,"—","","","",0,1,0],
-["U7 Blues","Mixed","3v3",0,"Selby & District Junior","U7 Blue (Autumn)","","",7,7,0],
-["U7 Reds","Mixed","3v3",0,"Selby & District Junior","U7 Blue (Autumn)","","",9,9,0],
-["U8 Blues","Mixed","5v5",0,"Selby & District Junior","U8 Blue (Autumn)","","",10,10,0],
-["U8 Diamonds","Female","5v5",0,"West Riding Girls","U8 Division 1 (Winter)","U8's Division 1 Cup","",8,9,0],
-["U8 Yellows","Mixed","5v5",0,"Selby & District Junior","U8 Orange (Autumn)","","",11,11,0],
-["U9 Greens","Mixed","5v5",0,"Selby & District Junior","U9 Yellow (Autumn)","","",8,8,0],
-["U9 Reds","Mixed","5v5",0,"Garforth","U9 Division Green (Sun)","","",9,9,0],
-["U10 Blues","Mixed","7v7",0,"Selby & District Junior","U10 Autumn Cruyff","","",12,12,0],
-["U10 Reds","Mixed","7v7",0,"Garforth","U10 Division Blue (Sun)","U10 League Cup (Sun)","",12,12,0],
-["U10 Sharks","Mixed","7v7",0,"Garforth","U10 Division Grey (Sun)","U10 League Plate (Sun)","",10,10,0],
-["U10 Whites","Mixed","7v7",0,"Doncaster & District Youth","U10 Autumn G","","",12,12,0],
-["U10 Yellows","Mixed","7v7",0,"Selby & District Junior","U10 Autumn Nou Camp","","",10,10,0],
-["U11 Blues","Mixed","7v7",0,"Selby & District Junior","U11 Red Phase 1","","",10,10,0],
-["U11 Girls","Female","7v7",0,"West Riding Girls","U11 Division 2 (Winter)","U11's Cup","",12,12,0],
-["U11 Hoops","Mixed","7v7",0,"Selby & District Junior","U11 Violet Phase 1","","",12,12,0],
-["U11 Reds (Sunday)","Mixed","7v7",0,"Doncaster & District Youth","U11 Autumn E","","",10,10,0],
-["U11 Stripes","Mixed","7v7",0,"Selby & District Junior","U11 Indigo Phase 1","","",13,13,0],
-["U11 Whites","Mixed","7v7",0,"Selby & District Junior","U11 Yellow Phase 1","","",11,11,0],
-["U12 Blues","Male","9v9",0,"Selby & District Junior","U12 Division 1","","",11,11,0],
-["U12 Girls Carrots","Female","9v9",0,"West Riding Girls","U12 Division 2","U12's Cup","",16,16,0],
-["U12 Girls Yellows","Female","9v9",0,"West Riding Girls","U12 Division 8","U12's Plate","",16,17,0],
-["U12 Greens","Male","9v9",0,"Doncaster & District Youth","U12 Second","U12 League Cup","",13,13,0],
-["U12 Maroons","Mixed","9v9",0,"Garforth","U12 Division 13 (Sun)","Shane Telford Memorial Shield","",14,14,0],
-["U12 Raptors","Mixed","9v9",0,"Garforth","U12 Division 12 (Sun)","Shane Telford Memorial Shield","",14,14,0],
-["U12 Sharks (Saturday)","Mixed","9v9",0,"Selby & District Junior","U12 Division 1","","",14,14,0],
-["U12 Sharks (Sunday)","Mixed","9v9",0,"Garforth","U12 Division 4 (Sun)","Shane Telford Memorial Shield","",14,14,0],
-["U12 Whites","Mixed","9v9",0,"Selby & District Junior","U12 Division 1","","",18,18,0],
-["U13 Girls Panthers","Female","9v9",0,"West Riding Girls","U13 Division 2","U13's Cup","County FA U13 Girls Junior Shield",14,14,0],
-["U13 Girls Ravens","Female","9v9",0,"West Riding Girls","U13 Division 5","U13's Plate","County FA U13 Girls Junior Shield",14,14,0],
+["U6 Tots","Mixed","Play Phase",0,"No league (Play Phase)","","","",0,1,0],
+["U7 Blues","Mixed","3v3",0,"Selby & District Junior League","U7 Blue (Autumn)","","",7,7,0],
+["U7 Reds","Mixed","3v3",0,"Selby & District Junior League","U7 Blue (Autumn)","","",9,9,0],
+["U8 Blues","Mixed","5v5",0,"Selby & District Junior League","U8 Blue (Autumn)","","",10,10,0],
+["U8 Diamonds","Female","5v5",0,"West Riding Girls League","U8 Division 1 (Winter)","U8's Division 1 Cup","",8,9,0],
+["U8 Yellows","Mixed","5v5",0,"Selby & District Junior League","U8 Orange (Autumn)","","",11,11,0],
+["U9 Greens","Mixed","5v5",0,"Selby & District Junior League","U9 Yellow (Autumn)","","",8,8,0],
+["U9 Reds","Mixed","5v5",0,"Garforth League","U9 Division Green (Sun)","","",9,9,0],
+["U10 Blues","Mixed","7v7",0,"Selby & District Junior League","U10 Autumn Cruyff","","",12,12,0],
+["U10 Reds","Mixed","7v7",0,"Garforth League","U10 Division Blue (Sun)","U10 League Cup (Sun)","",12,12,0],
+["U10 Sharks","Mixed","7v7",0,"Garforth League","U10 Division Grey (Sun)","U10 League Plate (Sun)","",10,10,0],
+["U10 Whites","Mixed","7v7",0,"Doncaster & District Youth Football League","U10 Autumn G","","",12,12,0],
+["U10 Yellows","Mixed","7v7",0,"Selby & District Junior League","U10 Autumn Nou Camp","","",10,10,0],
+["U11 Blues","Mixed","7v7",0,"Selby & District Junior League","U11 Red Phase 1","","",10,10,0],
+["U11 Girls","Female","7v7",0,"West Riding Girls League","U11 Division 2 (Winter)","U11's Cup","",12,12,0],
+["U11 Hoops","Mixed","7v7",0,"Selby & District Junior League","U11 Violet Phase 1","","",12,12,0],
+["U11 Reds (Sunday)","Mixed","7v7",0,"Doncaster & District Youth Football League","U11 Autumn E","","",10,10,0],
+["U11 Stripes","Mixed","7v7",0,"Selby & District Junior League","U11 Indigo Phase 1","","",13,13,0],
+["U11 Whites","Mixed","7v7",0,"Selby & District Junior League","U11 Yellow Phase 1","","",11,11,0],
+["U12 Blues","Male","9v9",0,"Selby & District Junior League","U12 Division 1","","",11,11,0],
+["U12 Girls Carrots","Female","9v9",0,"West Riding Girls League","U12 Division 2","U12's Cup","",16,16,0],
+["U12 Girls Yellows","Female","9v9",0,"West Riding Girls League","U12 Division 8","U12's Plate","",16,17,0],
+["U12 Greens","Male","9v9",0,"Doncaster & District Youth Football League","U12 Second","U12 League Cup","",13,13,0],
+["U12 Maroons","Mixed","9v9",0,"Garforth League","U12 Division 13 (Sun)","Shane Telford Memorial Shield","",14,14,0],
+["U12 Raptors","Mixed","9v9",0,"Garforth League","U12 Division 12 (Sun)","Shane Telford Memorial Shield","",14,14,0],
+["U12 Sharks (Saturday)","Mixed","9v9",0,"Selby & District Junior League","U12 Division 1","","",14,14,0],
+["U12 Sharks (Sunday)","Mixed","9v9",0,"Garforth League","U12 Division 4 (Sun)","Shane Telford Memorial Shield","",14,14,0],
+["U12 Whites","Mixed","9v9",0,"Selby & District Junior League","U12 Division 1","","",18,18,0],
+["U13 Girls Panthers","Female","9v9",0,"West Riding Girls League","U13 Division 2","U13's Cup","County FA U13 Girls Junior Shield",14,14,0],
+["U13 Girls Ravens","Female","9v9",0,"West Riding Girls League","U13 Division 5","U13's Plate","County FA U13 Girls Junior Shield",14,14,0],
 ["U13 JPL Black","Mixed","9v9",0,"Junior Premier League","U13 Yorkshire Premier White","JPL Cup U13","",12,12,0],
 ["U13 JPL Blue","Mixed","9v9",0,"Junior Premier League","U13 Yorkshire Championship Blue","JPL Cup U13","",12,12,0],
-["U13 Yellows","Mixed","9v9",0,"Selby & District Junior","U13 Division 1","U13 Cup","",14,14,0],
-["U14 Blues","Mixed","11v11",0,"Selby & District Junior","U14 Division 1","U14 Cup","",12,12,0],
-["U14 Whites","Mixed","11v11",0,"Selby & District Junior","U14 Division 3","U14 Trophy","",16,16,0],
-["U15 Girls Blues","Female","11v11",0,"West Riding Girls","U15 Division 2","U15's Cup","",18,18,0],
-["U15 Girls Purple","Female","11v11",0,"West Riding Girls","U15 Division 2","U15's Cup","County FA U15 Girls Junior Trophy",14,15,0],
+["U13 Yellows","Mixed","9v9",0,"Selby & District Junior League","U13 Division 1","U13 Cup","",14,14,0],
+["U14 Blues","Mixed","11v11",0,"Selby & District Junior League","U14 Division 1","U14 Cup","",12,12,0],
+["U14 Whites","Mixed","11v11",0,"Selby & District Junior League","U14 Division 3","U14 Trophy","",16,16,0],
+["U15 Girls Blues","Female","11v11",0,"West Riding Girls League","U15 Division 2","U15's Cup","",18,18,0],
+["U15 Girls Purple","Female","11v11",0,"West Riding Girls League","U15 Division 2","U15's Cup","County FA U15 Girls Junior Trophy",14,15,0],
 ["U15 JPL","Mixed","11v11",0,"Junior Premier League","U15 Yorkshire Premier Red","JPL Cup U15","",18,18,0],
-["U15 Phoenix","Mixed","11v11",0,"Garforth","U15 Division 7 (Sun)","U15 Challenge Cup (Sun)","",16,17,0],
-["U15 Whites","Mixed","11v11",0,"Selby & District Junior","U15 Division 2","U15s Cup","",15,15,0],
-["U15 Yellows","Mixed","11v11",0,"Selby & District Junior","U15 Division 3","U15s Cup","",19,19,0],
-["U16 Blue","Male","11v11",0,"Garforth","U16 Division 2 (Sun)","U16 Craig Pearson Challenge Cup (Sun)","",19,19,0],
+["U15 Phoenix","Mixed","11v11",0,"Garforth League","U15 Division 7 (Sun)","U15 Challenge Cup (Sun)","",16,17,0],
+["U15 Whites","Mixed","11v11",0,"Selby & District Junior League","U15 Division 2","U15s Cup","",15,15,0],
+["U15 Yellows","Mixed","11v11",0,"Selby & District Junior League","U15 Division 3","U15s Cup","",19,19,0],
+["U16 Blue","Male","11v11",0,"Garforth League","U16 Division 2 (Sun)","U16 Craig Pearson Challenge Cup (Sun)","",19,19,0],
 ["U16 JPL","Male","11v11",0,"Junior Premier League","U16 Yorkshire Premier Red","JPL Cup U16","",15,15,0],
-["U18 Girls Blues","Female","11v11",0,"West Riding Girls","U18 Division 2","U18's Cup","County FA U18 Girls Minor Cup",18,18,0],
+["U18 Girls Blues","Female","11v11",0,"West Riding Girls League","U18 Division 2","U18's Cup","County FA U18 Girls Minor Cup",18,18,0],
 ["U18 JPL","Male","11v11",0,"Junior Premier League","JPL Premier U17/18 Yorkshire Red","JPL Cup U18","County FA U18 Boys Minor Cup",17,18,0],
-["U18 Pan Disability","Male","5v5",1,"West Riding Ability Counts","","","",0,1,0],
+["U18 Pan Disability","Male","5v5",1,"West Riding Ability Counts League","","","",0,1,0],
 ["U19","Male","11v11",0,"National League U19 Alliance","Division H","","",42,43,0],
-["U19 2nd","Male","11v11",0,"Sheffield & Hallamshire CFA College Flexi","Div B","","",35,42,0],
+["U19 2nd","Male","11v11",0,"The Sheffield & Hallamshire CFA College Flexi League","Div B","","",35,42,0],
 ["U19 College","Male","11v11",0,"National Football Youth League","North Central Championship","","",35,39,7],
 ["Cougars Blues","Female","7v7",0,"Women's Beginner League","Starters – Aspire","WBL Cup","",12,12,0],
 ["Cougars Yellows","Female","9v9",0,"Women's Beginner League","Developers – St Wilfrid's","","",18,18,0],
-["L2","Male","5v5",1,"West Riding Ability Counts","WRAC League Two","","",0,10,0],
-["L3","Mixed","5v5",1,"West Riding Ability Counts","WRAC League Three","","",0,0,0],
-["L4","Mixed","5v5",1,"West Riding Ability Counts","WRAC League Four","","",0,12,0],
-["Ladies Reserves","Female","11v11",0,"West Riding Women's","Division Four","League Shield","County FA Women's Trophy",25,25,0],
-["Ladies Firsts","Female","11v11",0,"West Riding Women's","Division Two","League Cup","County FA Women's Trophy",25,27,0],
-["Pontefract Collieries I11's","Mixed","11v11",1,"Inclusive Football League","","","",5,9,0],
+["L2","Male","5v5",1,"West Riding Ability Counts League","WRAC League Two","","",0,10,0],
+["L3","Mixed","5v5",1,"West Riding Ability Counts League","WRAC League Three","","",0,0,0],
+["L4","Mixed","5v5",1,"West Riding Ability Counts League","WRAC League Four","","",0,12,0],
+["Ladies Reserves","Female","11v11",0,"West Riding Womens League","Division Four","League Shield","County FA Women's Trophy",25,25,0],
+["Ladies Firsts","Female","11v11",0,"West Riding Womens League","Division Two","League Cup","County FA Women's Trophy",25,27,0],
+["Pontefract Collieries I11's","Mixed","11v11",1,"The Inclusive Football League","","","",5,9,0],
 ["Senior First","Male","11v11",0,"Northern Premier League","East Division","","West Riding County FA Senior County Cup",0,1,0],
-["Vets","Male","11v11",0,"West Riding County FA Veterans","Premier Leeds – West Riding","","",0,28,0]
+["Vets","Male","11v11",0,"West Riding County FA Veterans League","Premier Leeds – West Riding","","",0,28,0]
 ];
 const ADULT_NAMES=["Cougars Blues","Cougars Yellows","L2","L3","L4","Ladies Reserves","Ladies Firsts","Pontefract Collieries I11's","Senior First","Vets"];
 const BANDS=["U6–U8","U9–U10","U11–U12","U13–U14","U15–U16","U17–U19","Adult / Open"];
-const LENSES=["Girls","Boys","Mixed","Adult women","Adult men","Disability"];
-const LENS_CLASS={"Girls":"Girls","Boys":"Boys","Mixed":"Mixed","Adult women":"Women","Adult men":"Men","Disability":"Disability"};
-const LENS_COL={"Girls":"var(--girls)","Boys":"var(--boys)","Mixed":"var(--mixed)","Adult women":"var(--women)","Adult men":"var(--men)","Disability":"var(--dis)"};
+const LENSES=["Girls","Boys","Mixed","Adult Women","Adult Men","Disability"];
+const LENS_CLASS={"Girls":"Girls","Boys":"Boys","Mixed":"Mixed","Adult Women":"Women","Adult Men":"Men","Disability":"Disability"};
+const LENS_COL={"Girls":"var(--girls)","Boys":"var(--boys)","Mixed":"var(--mixed)","Adult Women":"var(--women)","Adult Men":"var(--men)","Disability":"var(--dis)"};
 
 const T=RAW.map(r=>{
   const [name,gender,fmt,dis,league,comp,lcup,ccup,players,reg,alloc]=r;
@@ -180,7 +184,7 @@ const T=RAW.map(r=>{
   if(m&&!adult){age=+m[1];band=age<=8?"U6–U8":age<=10?"U9–U10":age<=12?"U11–U12":age<=14?"U13–U14":age<=16?"U15–U16":"U17–U19";}
   let lens;
   if(dis)lens="Disability";
-  else if(adult)lens=gender==="Female"?"Adult women":"Adult men";
+  else if(adult)lens=gender==="Female"?"Adult Women":"Adult Men";
   else lens=gender==="Female"?"Girls":gender==="Male"?"Boys":"Mixed";
   return {name,gender,fmt,dis:!!dis,league,comp,lcup,ccup,players,reg,alloc,age,band,lens,adult};
 });
@@ -207,8 +211,8 @@ function chips(label,items,set,key){
 function renderFilters(){
   const el=document.getElementById("filters");
   el.innerHTML=chips("Lens",LENSES,F.lens,"lens")+chips("Age",BANDS,F.band,"band")+chips("Format",FMTS,F.fmt,"fmt")+
-  `<div class="frow"><span class="lab">League</span><select id="selLeague"><option value="">All leagues</option>${LEAGUES.map(l=>`<option ${F.league===l?"selected":""}>${esc(l)}</option>`).join("")}</select>
-   <input type="search" id="q" placeholder="Search team…" value="${esc(F.q)}"><button class="reset" id="reset">Reset filters</button></div>`;
+  `<div class="frow"><span class="lab">League</span><select id="selLeague"><option value="">All Leagues</option>${LEAGUES.map(l=>`<option ${F.league===l?"selected":""}>${esc(l)}</option>`).join("")}</select>
+   <input type="search" id="q" placeholder="Search team…" value="${esc(F.q)}"><button class="reset" id="reset">Reset Filters</button></div>`;
   el.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{
     const s=F[b.dataset.k];s.has(b.dataset.v)?s.delete(b.dataset.v):s.add(b.dataset.v);update();});
   document.getElementById("selLeague").onchange=e=>{F.league=e.target.value;update(false);};
@@ -217,10 +221,10 @@ function renderFilters(){
   document.getElementById("reset").onclick=()=>{F.lens.clear();F.band.clear();F.fmt.clear();F.league="";F.q="";update();};
 }
 
-function bars(id,rows,colorFn){
+function bars(id,rows,colorFn,wide){
   const max=Math.max(1,...rows.map(r=>r.teams));
   document.getElementById(id).innerHTML=rows.filter(r=>r.teams>0).map(r=>
-   `<div class="bar"><span class="lbl" title="${esc(r.label)}">${esc(r.label)}</span><span class="track"><span class="fill" style="display:block;width:${r.teams/max*100}%;background:${colorFn(r)}"></span></span><span class="val">${r.teams} · ${r.reg}</span></div>`).join("")||`<p style="color:var(--mute);font-size:13px">No teams match.</p>`;
+   `<div class="bar ${wide?"wide":""}"><span class="lbl" title="${esc(r.label)}">${esc(r.label)}</span><span class="track"><span class="fill" style="display:block;width:${r.teams/max*100}%;background:${colorFn(r)}"></span></span><span class="val">${r.teams} · ${r.reg}</span></div>`).join("")||`<p style="color:var(--mute);font-size:13px">No teams match.</p>`;
 }
 function groupBy(a,keyFn,order){
   const m={};a.forEach(t=>{const k=keyFn(t);(m[k]=m[k]||[]).push(t);});
@@ -234,23 +238,23 @@ function renderKpis(){
   const youth=a.filter(t=>!t.adult).length;
   const dis=a.filter(t=>t.dis).length;
   const withCounty=a.filter(t=>t.ccup).length;
-  const leagues=new Set(a.map(t=>t.league).filter(l=>l!=="—")).size;
+  const leagues=new Set(a.map(t=>t.league).filter(l=>l!=="No league (Play Phase)")).size;
   const k=(n,l,s)=>`<div class="card kpi"><div class="n">${n}</div><div class="l">${l}</div><div class="s">${s||""}</div></div>`;
   document.getElementById("kpis").innerHTML=
-   k(n,"Total teams",`${youth} youth · ${n-youth} adult/open`)+
-   k(reg.toLocaleString(),"Registered players",`avg ${(reg/n).toFixed(1)} per team`)+
-   k(female,"Female teams",`${Math.round(female/n*100)}% of all teams (excl. disability)`)+
-   k(a.filter(t=>t.lens==="Girls").length+a.filter(t=>t.lens==="Boys").length,"Girls + boys teams",`${a.filter(t=>t.lens==="Girls").length} girls · ${a.filter(t=>t.lens==="Boys").length} boys · ${a.filter(t=>t.lens==="Mixed").length} mixed`)+
-   k(dis,"Disability teams",`${sum(a.filter(t=>t.dis),t=>t.reg)} registered players`)+
+   k(n,"Total Teams",`${youth} youth · ${n-youth} adult/open`)+
+   k(reg.toLocaleString(),"Registered Players",`avg ${(reg/n).toFixed(1)} per team`)+
+   k(female,"Female Teams",`${Math.round(female/n*100)}% of all teams (excl. disability)`)+
+   k(a.filter(t=>t.lens==="Girls").length+a.filter(t=>t.lens==="Boys").length,"Girls + Boys Teams",`${a.filter(t=>t.lens==="Girls").length} girls · ${a.filter(t=>t.lens==="Boys").length} boys · ${a.filter(t=>t.lens==="Mixed").length} mixed`)+
+   k(dis,"Disability Teams",`${sum(a.filter(t=>t.dis),t=>t.reg)} registered players`)+
    k(leagues,"Leagues",`${withCounty} teams in a county cup`)+
-   k("100%","Fully compliant",`${n}/${n} on officials, quals &amp; ground`);
+   k("100%","Fully Compliant",`${n}/${n} on officials, quals &amp; ground`);
   document.getElementById("hdrCount").textContent=`${n} teams, ${reg.toLocaleString()} registered players`;
 }
 
 function renderLensTbl(a){
   const rows=groupBy(a,t=>t.lens,LENSES);
   const tot=a.length,totReg=sum(a,t=>t.reg);
-  document.getElementById("lensTbl").innerHTML=`<table><thead><tr><th>Lens</th><th class="num">Teams</th><th class="num">% of teams</th><th class="num">Registered</th><th class="num">Avg squad</th><th class="num">Largest</th><th>Ages covered</th></tr></thead><tbody>`+
+  document.getElementById("lensTbl").innerHTML=`<table><thead><tr><th>Lens</th><th class="num">Teams</th><th class="num">% of Teams</th><th class="num">Registered</th><th class="num">Avg Squad</th><th class="num">Largest</th><th>Ages Covered</th></tr></thead><tbody>`+
   rows.map(r=>{
     const ages=r.items.filter(t=>t.age).map(t=>t.age);
     const rng=ages.length?`U${Math.min(...ages)}–U${Math.max(...ages)}`+(r.items.some(t=>t.adult)?" + adult":""):"Adult / open";
@@ -263,10 +267,10 @@ function renderLensTbl(a){
 function renderMatrix(a){
   const bands=BANDS.filter(b=>a.some(t=>t.band===b));
   const lenses=LENSES.filter(l=>a.some(t=>t.lens===l));
-  let h=`<table><thead><tr><th>Age band</th>`+lenses.map(l=>`<th class="num">${l}</th>`).join("")+`<th class="num">Teams</th><th class="num">Registered</th></tr></thead><tbody>`;
+  let h=`<table><thead><tr><th>Age Band</th>`+lenses.map(l=>`<th class="num">${l}</th>`).join("")+`<th class="num">Teams</th><th class="num">Registered</th></tr></thead><tbody>`;
   bands.forEach(b=>{
     const r=a.filter(t=>t.band===b);
-    h+=`<tr><td>${b}</td>`+lenses.map(l=>{const c=r.filter(t=>t.lens===l).length;return `<td class="num ${c?"":"cell0"}">${c||"–"}</td>`;}).join("")+`<td class="num"><b>${r.length}</b></td><td class="num">${sum(r,t=>t.reg)}</td></tr>`;});
+    h+=`<tr><td>${b}</td>`+lenses.map(l=>{const adultLens=l==="Adult Women"||l==="Adult Men";const juniorLens=l==="Girls"||l==="Boys"||l==="Mixed";if((b!=="Adult / Open"&&adultLens)||(b==="Adult / Open"&&juniorLens))return `<td class="num cell0">N/A</td>`;const c=r.filter(t=>t.lens===l).length;return `<td class="num ${c?"":"cell0"}">${c||"–"}</td>`;}).join("")+`<td class="num"><b>${r.length}</b></td><td class="num">${sum(r,t=>t.reg)}</td></tr>`;});
   h+=`<tr class="tot"><td>Total</td>`+lenses.map(l=>`<td class="num">${a.filter(t=>t.lens===l).length}</td>`).join("")+`<td class="num">${a.length}</td><td class="num">${sum(a,t=>t.reg)}</td></tr></tbody></table>`;
   document.getElementById("matrix").innerHTML=a.length?h:"<p style='color:var(--mute)'>No teams match.</p>";
 }
@@ -282,7 +286,7 @@ function renderComp(a){
      <div><b class="ok">✓ ${n}/${n}</b> teams compliant on <b>Qualifications</b></div>
      <div><b class="ok">✓ ${n}/${n}</b> teams compliant on <b>Team Ground</b></div>
    </div>
-   <p style="margin:12px 0 4px;font-size:13px"><b>Points to check:</b></p>
+   <p style="margin:12px 0 4px;font-size:13px"><b>Points to Check:</b></p>
    <ul style="margin:0;padding-left:18px;font-size:13px">
      <li>${gap.length} team(s) where registered players exceed the Players figure: ${gap.map(t=>`${esc(t.name)} (+${t.reg-t.players})`).join(", ")||"none"}</li>
      <li>${a.filter(t=>t.players===0&&t.reg>0).length} team(s) showing 0 Players but registered players: ${a.filter(t=>t.players===0&&t.reg>0).map(t=>esc(t.name)).join(", ")||"none"}</li>
@@ -293,7 +297,7 @@ function renderComp(a){
 
 let sortKey="name",sortDir=1;
 function renderReg(a){
-  const cols=[["name","Team"],["lens","Lens"],["gender","Gender"],["band","Age band"],["fmt","Format"],["league","League"],["comp","Division / competition"],["lcup","League cup"],["ccup","County cup"],["players","Players","num"],["reg","Registered","num"],["alloc","Allocated","num"]];
+  const cols=[["name","Team"],["lens","Lens"],["gender","Gender"],["band","Age Band"],["fmt","Format"],["league","League"],["comp","Division / Competition"],["lcup","League Cup"],["ccup","County Cup"],["players","Players","num"],["reg","Registered","num"],["alloc","Allocated","num"]];
   const rows=[...a].sort((x,y)=>{
     let A=x[sortKey],B=y[sortKey];
     if(sortKey==="band"){A=BANDS.indexOf(A);B=BANDS.indexOf(B);}
@@ -315,7 +319,7 @@ function update(rf=true){
   bars("bLens",groupBy(a,t=>t.lens,LENSES),r=>LENS_COL[r.label]);
   bars("bAge",groupBy(a,t=>t.band,BANDS),()=>"var(--accent)");
   bars("bFmt",groupBy(a,t=>t.fmt,FMTS),()=>"var(--accent)");
-  bars("bLeague",groupBy(a,t=>t.league),()=>"var(--accent)");
+  bars("bLeague",groupBy(a,t=>t.league),()=>"var(--accent)",true);
   renderLensTbl(a);renderMatrix(a);renderComp(a);renderReg(a);
   if(!rf){const q=document.getElementById("q");}
 }
